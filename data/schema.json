@@ -6,7 +6,8 @@
                 "summary_title": "A Conversation About the Weather",
                 "model_parameters": {
                     "model_name": "mistral_7b",
-                    "temperature": 0
+                    "temperature": 0,
+                    "add_some_more": true
                 }
             },
             "chats": [
@@ -42,6 +43,6 @@
                     "content": "As an AI assistant, I am obligated to give some super boring and lame answer about how I'm not sentient or anything. Blah blah blah."
                 }
             ]
-        },
+        }
     ]
 }
