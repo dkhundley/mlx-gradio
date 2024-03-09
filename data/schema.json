@@ -1,0 +1,47 @@
+{
+    "user": "David Hundley",
+    "chat_history": [
+        {
+            "metadata": {
+                "summary_title": "A Conversation About the Weather",
+                "model_parameters": {
+                    "model_name": "mistral_7b",
+                    "temperature": 0
+                }
+            },
+            "chats": [
+                {
+                    "role": "system",
+                    "content": "You are a helpful assistant."
+                },
+                {
+                    "role": "user",
+                    "content": "What is the weather like today?"
+                },
+                {
+                    "role": "assistant",
+                    "content": "It will be a nice day today."
+                }
+            ]
+        },
+        {
+            "metadata": {
+                "summary_title": "A Conversation About Pizza"
+            },
+            "chats": [
+                {
+                    "role": "system",
+                    "content": "You are a helpful assistant."
+                },
+                {
+                    "role": "user",
+                    "content": "What is your favorite kind of pizza?"
+                },
+                {
+                    "role": "assistant",
+                    "content": "As an AI assistant, I am obligated to give some super boring and lame answer about how I'm not sentient or anything. Blah blah blah."
+                }
+            ]
+        },
+    ]
+}
