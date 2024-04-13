@@ -112,6 +112,50 @@ def load_chat_history():
 
 
 
+## GRADIO PARAMETER UPDATES
+## ---------------------------------------------------------------------------------------------------------------------
+def update_meta_prompt():
+    '''
+    Updates the meta prompt with a new one per the user's input
+
+    Inputs:
+        - ?
+
+    Returns:
+        - ?
+    '''
+    pass
+
+
+
+def update_temperature():
+    '''
+    Updates the temperature with a new one per the user's input
+
+    Inputs:
+        - ?
+
+    Returns:
+        - ?
+    '''
+    pass
+
+
+
+def update_max_tokens():
+    '''
+    Updates the meta prompt with a new one per the user's input
+
+    Inputs:
+        - ?
+
+    Returns:
+        - ?
+    '''
+    pass
+
+
+
 ## GRADIO INTERACTIONS
 ## ---------------------------------------------------------------------------------------------------------------------
 def load_chat_interaction():
