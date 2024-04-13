@@ -1,6 +1,20 @@
-def generate_summary_title():
+def load_chat_history():
     '''
-    Generates a summary title based on the interaction between the user and the AI
+    Loads chat history from file
+
+    Inputs:
+        - ?
+    
+    Returns:
+        - ?
+    '''
+    pass
+
+
+
+def load_chat_interaction():
+    '''
+    Loads a specific chat interaction from the user's history
 
     Inputs:
         - ?
@@ -11,14 +25,26 @@ def generate_summary_title():
     pass
 
 
-
-def load_chat_history():
+def process_user_prompt():
     '''
-    Loads chat history from file
+    Takes in a user's prompt to generate an answer (completion) from the AI
 
     Inputs:
         - ?
-    
+
+    Returns:
+        - ?
+    '''
+    pass
+
+
+def generate_summary_title():
+    '''
+    Generates a summary title based on the interaction between the user and the AI
+
+    Inputs:
+        - ?
+
     Returns:
         - ?
     '''
@@ -50,3 +76,4 @@ def start_new_chat():
     Returns:
         - ?
     '''
+    pass
