@@ -2,6 +2,7 @@
     "chat_history": [
         {
             "summary_title": "A Conversation About the Weather",
+            "meta_prompt": "You are a helpful assistant.",
             "chat_interaction": [
                 {
                     "role": "system",
@@ -15,8 +16,7 @@
                     "role": "assistant",
                     "content": "It will be a nice day today.",
                     "metadata": {
-                        "model_name": "mistral_7b",
-                        "meta_prompt": "You are a helpful assistant.",
+                        "model_name": "mistralai/Mistral-7B-Instruct-v0.2",
                         "temperature": 0.7,
                         "max_tokens": 1000,
                         "like_data": null
@@ -26,6 +26,7 @@
         },
         {
             "summary_title": "A Conversation About Pizza",
+            "meta_prompt": "You are a helpful assistant.",
             "chat_interaction": [
                 {
                     "role": "system",
@@ -39,8 +40,7 @@
                     "role": "assistant",
                     "content": "As an AI assistant, I am obligated to give some super boring and lame answer about how I'm not sentient or anything. Blah blah blah.",
                     "metadata": {
-                        "model_name": "mistral_7b",
-                        "meta_prompt": "You are a helpful assistant.",
+                        "model_name": "mistralai/Mistral-7B-Instruct-v0.2",
                         "temperature": 0.7,
                         "max_tokens": 1000,
                         "like_data": null
