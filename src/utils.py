@@ -52,47 +52,47 @@ class MLXModelParameters():
 
 ## MLX LANGCHAIN CUSTOM INTEGRATION
 ## ---------------------------------------------------------------------------------------------------------------------
-# # Instantiating the class representing the MLX Chat Model, inheriting from LangChain's BaseChatModel
-# class MLXChatModel(BaseChatModel):
-#     mlx_path: str
-#     mlx_model: Any = Field(default = None, exclude = True)
-#     mlx_tokenizer: Any = Field(default = None, exclude = True)
-#     max_tokens: int = Field(default = 1000)
+# Instantiating the class representing the MLX Chat Model, inheriting from LangChain's BaseChatModel
+class MLXChatModel(BaseChatModel):
+    mlx_path: str
+    mlx_model: Any = Field(default = None, exclude = True)
+    mlx_tokenizer: Any = Field(default = None, exclude = True)
+    max_tokens: int = Field(default = 1000)
 
-#     @property
-#     def _llm_type(self) -> str:
-#         return 'MLXChatModel'
+    @property
+    def _llm_type(self) -> str:
+        return 'MLXChatModel'
     
-#     @root_validator()
-#     def load_model(cls, values: Dict) -> Dict:
+    @root_validator()
+    def load_model(cls, values: Dict) -> Dict:
 
-#         # Loading the model and tokenizer with the input string
-#         model, tokenizer = mlx_load(path_or_hf_repo = values['mlx_path'])
+        # Loading the model and tokenizer with the input string
+        model, tokenizer = mlx_load(path_or_hf_repo = values['mlx_path'])
         
-#         # Saving the variables back appropriately
-#         values['mlx_model'] = model
-#         values['mlx_tokenizer'] = tokenizer
-#         return values
+        # Saving the variables back appropriately
+        values['mlx_model'] = model
+        values['mlx_tokenizer'] = tokenizer
+        return values
     
-#     def _generate(self, messages: List[BaseMessage], stop: Optional[List[str]]) -> ChatResult:
+    def _generate(self, messages: List[BaseMessage], stop: Optional[List[str]]) -> ChatResult:
 
-#         # Instantiating an empty string to represent the prompt we will be generating in the end
-#         prompt = ''
+        # Instantiating an empty string to represent the prompt we will be generating in the end
+        prompt = ''
 
-#         # Extracting the raw text from each of the LangChain message types
-#         for message in messages:
-#             prompt += f'\n\n{message.content}'
+        # Extracting the raw text from each of the LangChain message types
+        for message in messages:
+            prompt += f'\n\n{message.content}'
 
-#         # Generating the LLM response using MLX
-#         mlx_response = mlx_generate(
-#             model = self.mlx_model,
-#             tokenizer = self.mlx_tokenizer,
-#             max_tokens = self.max_tokens,
-#             prompt = prompt
-#         )
+        # Generating the LLM response using MLX
+        mlx_response = mlx_generate(
+            model = self.mlx_model,
+            tokenizer = self.mlx_tokenizer,
+            max_tokens = self.max_tokens,
+            prompt = prompt
+        )
 
-#         # Returning the MLX response as a proper LangChain ChatResult object
-#         return ChatResult(generations = [ChatGeneration(message = AIMessage(content = mlx_response))])
+        # Returning the MLX response as a proper LangChain ChatResult object
+        return ChatResult(generations = [ChatGeneration(message = AIMessage(content = mlx_response))])
 
 
 
