@@ -1,6 +1,5 @@
 # Importing the necessary Python libraries
 import os
-import yaml
 import json
 import pandas as pd
 import gradio as gr
@@ -21,12 +20,17 @@ test_data = {
 
 df = pd.DataFrame(test_data)
 
-## API INSTANTIATION
-## ---------------------------------------------------------------------------------------------------------------------
-# Loading the API key and organization ID from file (NOT pushed to GitHub)
-with open('../sensitive/api-keys.yaml') as f:
-    keys_yaml = yaml.safe_load(f)
 
+## CONSTANTS
+## ---------------------------------------------------------------------------------------------------------------------
+# Setting constant values to represent model name and directory
+MODEL_NAME = 'mistralai/Mistral-7B-Instruct-v0.2'
+BASE_MODEL_DIRECTORY = '../models'
+MLX_MODEL_DIRECTORY = f'{BASE_MODEL_DIRECTORY}/mlx'
+mlx_model_directory = f'{MLX_MODEL_DIRECTORY}/{MODEL_NAME}'
+
+# Setting a default meta prompt
+DEFAULT_META_PROMPT = 'You are a helpful assistant.'
 
 
 def greet(history, input):
@@ -80,6 +84,12 @@ with gr.Blocks(theme = gr.themes.Base()) as demo:
 ## SCRIPT INVOCATION
 ## ---------------------------------------------------------------------------------------------------------------------
 if __name__ == "__main__":
+
+    # Loading the MLX model parameters
+    mlx_model_parameters = MLXModelParameters()
+
+    # Instantiating the MLX model using our quantized Mistral 7B
+    mlx_model = MLXChatModel(mlx_path = mlx_model_directory)
 
     # Launching the Gradio Chatbot
     demo.launch()
