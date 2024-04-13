@@ -1,15 +1,7 @@
 {
-    "user": "David Hundley",
     "chat_history": [
         {
-            "metadata": {
-                "summary_title": "A Conversation About the Weather",
-                "model_parameters": {
-                    "model_name": "mistral_7b",
-                    "temperature": 0,
-                    "add_some_more": true
-                }
-            },
+            "summary_title": "A Conversation About the Weather",
             "chats": [
                 {
                     "role": "system",
@@ -21,14 +13,18 @@
                 },
                 {
                     "role": "assistant",
-                    "content": "It will be a nice day today."
+                    "content": "It will be a nice day today.",
+                    "metadata": {
+                        "model_name": "mistral_7b",
+                        "temperature": 0.7,
+                        "max_tokens": 1000,
+                        "like_data": null
+                    }
                 }
             ]
         },
         {
-            "metadata": {
-                "summary_title": "A Conversation About Pizza"
-            },
+            "summary_title": "A Conversation About Pizza",
             "chats": [
                 {
                     "role": "system",
@@ -40,7 +36,13 @@
                 },
                 {
                     "role": "assistant",
-                    "content": "As an AI assistant, I am obligated to give some super boring and lame answer about how I'm not sentient or anything. Blah blah blah."
+                    "content": "As an AI assistant, I am obligated to give some super boring and lame answer about how I'm not sentient or anything. Blah blah blah.",
+                    "metadata": {
+                        "model_name": "mistral_7b",
+                        "temperature": 0.7,
+                        "max_tokens": 1000,
+                        "like_data": null
+                    }
                 }
             ]
         }
