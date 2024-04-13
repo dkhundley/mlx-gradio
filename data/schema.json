@@ -16,6 +16,7 @@
                     "content": "It will be a nice day today.",
                     "metadata": {
                         "model_name": "mistral_7b",
+                        "meta_prompt": "You are a helpful assistant.",
                         "temperature": 0.7,
                         "max_tokens": 1000,
                         "like_data": null
@@ -39,6 +40,7 @@
                     "content": "As an AI assistant, I am obligated to give some super boring and lame answer about how I'm not sentient or anything. Blah blah blah.",
                     "metadata": {
                         "model_name": "mistral_7b",
+                        "meta_prompt": "You are a helpful assistant.",
                         "temperature": 0.7,
                         "max_tokens": 1000,
                         "like_data": null
