@@ -1,9 +1,11 @@
 {
+    "user_id": "user-1234",
     "chat_history": [
         {
             "summary_title": "A Conversation About the Weather",
+            "conversation_id": "askljdfwe",
             "system_prompt": "You are a helpful assistant.",
-            "chat_interaction": [
+            "conversation": [
                 {
                     "role": "system",
                     "content": "You are a helpful assistant."
@@ -17,17 +19,21 @@
                     "content": "It will be a nice day today.",
                     "metadata": {
                         "model_name": "mistralai/Mistral-7B-Instruct-v0.2",
-                        "temperature": 0.7,
-                        "max_tokens": 1000,
+                        "timestamp": "timestamp",
+                        "hyperparameters": {
+                            "temperature": 0.7,
+                            "max_tokens": 1000
+                        },
                         "like_data": null
                     }
                 }
             ]
         },
         {
-            "summary_title": "A Conversation About Pizza",
+            "summary_title": "A Conversation About the Weather",
+            "conversation_id": "askljdfwe",
             "system_prompt": "You are a helpful assistant.",
-            "chat_interaction": [
+            "conversation": [
                 {
                     "role": "system",
                     "content": "You are a helpful assistant."
@@ -41,8 +47,11 @@
                     "content": "As an AI assistant, I am obligated to give some super boring and lame answer about how I'm not sentient or anything. Blah blah blah.",
                     "metadata": {
                         "model_name": "mistralai/Mistral-7B-Instruct-v0.2",
-                        "temperature": 0.7,
-                        "max_tokens": 1000,
+                        "timestamp": "timestamp",
+                        "hyperparameters": {
+                            "temperature": 0.7,
+                            "max_tokens": 1000
+                        },
                         "like_data": null
                     }
                 }
