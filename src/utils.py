@@ -16,8 +16,8 @@ from langchain_core.outputs import ChatGeneration, ChatResult
 
 ## LANGCHAIN SETUP
 ## ---------------------------------------------------------------------------------------------------------------------
-# Setting a default meta prompt
-DEFAULT_META_PROMPT = 'You are a helpful assistant.'
+# Setting a default system prompt
+DEFAULT_SYSTEM_PROMPT = 'You are a helpful assistant.'
 
 
 
@@ -25,16 +25,16 @@ DEFAULT_META_PROMPT = 'You are a helpful assistant.'
 ## ---------------------------------------------------------------------------------------------------------------------
 class MLXModelParameters():
 
-    def __init__(self, temp = 0.7, max_tokens = 1000, meta_prompt = DEFAULT_META_PROMPT):
+    def __init__(self, temp = 0.7, max_tokens = 1000, system_prompt = DEFAULT_SYSTEM_PROMPT):
         self.temp = temp
         self.max_tokens = max_tokens
-        self.meta_prompt = meta_prompt
+        self.system_prompt = system_prompt
 
     def __str__(self):
-        return f'Temperature: {self.temp}\nMax Tokens: {self.max_tokens}\nMeta Prompt: {self.meta_prompt}'
+        return f'Temperature: {self.temp}\nMax Tokens: {self.max_tokens}\nSystem Prompt: {self.system_prompt}'
     
     def __repr__(self):
-        return f'Temperature: {self.temp}\nMax Tokens: {self.max_tokens}\nMeta Prompt: {self.meta_prompt}'
+        return f'Temperature: {self.temp}\nMax Tokens: {self.max_tokens}\System Prompt: {self.system_prompt}'
 
     def update_temp(self, new_temp):
         self.temp = new_temp
@@ -42,8 +42,8 @@ class MLXModelParameters():
     def update_max_tokens(self, new_max_tokens):
         self.max_tokens = new_max_tokens
 
-    def update_meta_prompt(self, new_meta_prompt):
-        self.meta_prompt = new_meta_prompt
+    def update_system_prompt(self, new_system_prompt):
+        self.system_prompt = new_system_prompt
 
     def to_json(self):
         return { 'temp': self.temp, 'max_tokens': self.max_tokens }
@@ -114,9 +114,9 @@ def load_chat_history():
 
 ## GRADIO PARAMETER UPDATES
 ## ---------------------------------------------------------------------------------------------------------------------
-def update_meta_prompt():
+def update_system_prompt():
     '''
-    Updates the meta prompt with a new one per the user's input
+    Updates the system prompt with a new one per the user's input
 
     Inputs:
         - ?
@@ -144,7 +144,7 @@ def update_temperature():
 
 def update_max_tokens():
     '''
-    Updates the meta prompt with a new one per the user's input
+    Updates the system prompt with a new one per the user's input
 
     Inputs:
         - ?

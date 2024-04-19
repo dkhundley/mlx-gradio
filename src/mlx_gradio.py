@@ -110,10 +110,10 @@ with gr.Blocks(theme = gr.themes.Base()) as demo:
     # Creating the interface for the "Settings" tab
     with gr.Tab('Settings'):
 
-        # Creating a textbox for the user to update the user
-        meta_prompt = gr.Textbox(
-            label = 'Meta Prompt (Note: Meta prompts are only applied to new chat interactions.)',
-            value = mlx_model_parameters.meta_prompt,
+        # Creating a textbox for the user to update the system
+        system_prompt = gr.Textbox(
+            label = 'System Prompt (Note: System prompts are only applied to new chat interactions.)',
+            value = mlx_model_parameters.system_prompt,
             interactive = True
         )
 

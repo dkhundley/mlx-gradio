@@ -2,7 +2,7 @@
     "chat_history": [
         {
             "summary_title": "A Conversation About the Weather",
-            "meta_prompt": "You are a helpful assistant.",
+            "system_prompt": "You are a helpful assistant.",
             "chat_interaction": [
                 {
                     "role": "system",
@@ -26,7 +26,7 @@
         },
         {
             "summary_title": "A Conversation About Pizza",
-            "meta_prompt": "You are a helpful assistant.",
+            "system_prompt": "You are a helpful assistant.",
             "chat_interaction": [
                 {
                     "role": "system",
