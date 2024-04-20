@@ -1,6 +1,6 @@
 {
     "user_id": "user-1234",
-    "chat_history": [
+    "conversation_history": [
         {
             "summary_title": "A Conversation About the Weather",
             "conversation_id": "askljdfwe",
