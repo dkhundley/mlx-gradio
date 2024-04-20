@@ -3,7 +3,7 @@
     "conversation_history": [
         {
             "summary_title": "A Conversation About the Weather",
-            "conversation_id": "askljdfwe",
+            "conversation_id": "c0393de1-2a2f-4e6a-80d0-cee64fcc6b60",
             "system_prompt": "You are a helpful assistant.",
             "conversation": [
                 {
@@ -19,7 +19,7 @@
                     "content": "It will be a nice day today.",
                     "metadata": {
                         "model_name": "mistralai/Mistral-7B-Instruct-v0.2",
-                        "timestamp": "timestamp",
+                        "timestamp": "2024-04-20 12:29:52.203418+00:00",
                         "hyperparameters": {
                             "temperature": 0.7,
                             "max_tokens": 1000
@@ -31,7 +31,7 @@
         },
         {
             "summary_title": "A Conversation About the Weather",
-            "conversation_id": "askljdfwe",
+            "conversation_id": "a278cc3f-ce75-4097-9d38-8c638be78e33",
             "system_prompt": "You are a helpful assistant.",
             "conversation": [
                 {
@@ -47,7 +47,7 @@
                     "content": "As an AI assistant, I am obligated to give some super boring and lame answer about how I'm not sentient or anything. Blah blah blah.",
                     "metadata": {
                         "model_name": "mistralai/Mistral-7B-Instruct-v0.2",
-                        "timestamp": "timestamp",
+                        "timestamp": "2024-04-20 12:30:05.467648+00:00",
                         "hyperparameters": {
                             "temperature": 0.7,
                             "max_tokens": 1000
