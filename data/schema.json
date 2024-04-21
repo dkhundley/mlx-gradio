@@ -1,8 +1,9 @@
 {
     "user_id": "user_1234",
     "chat_history": [
-        "conv_id_c0393de1_2a2f_4e6a_80d0_cee64fcc6b60": {
+        {
             "summary_title": "A Conversation About the Weather",
+            "conversation_id": "conv_id_c0393de1_2a2f_4e6a_80d0_cee64fcc6b60",
             "conversation": [
                 {
                     "role": "system",
@@ -27,8 +28,9 @@
                 }
             ]
         },
-        "conv_id_a278cc3f_ce75_4097_9d38_8c638be78e33": {
-            "summary_title": "A Conversation About the Weather",
+        {
+            "summary_title": "A Conversation About Pizza",
+            "conversation_id": "conv_id_a278cc3f_ce75_4097_9d38_8c638be78e33",
             "conversation": [
                 {
                     "role": "system",
