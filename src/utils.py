@@ -1,114 +1,127 @@
 # Importing the necessary Python libraries
 import os
 import json
+import uuid
+import copy
 import pandas as pd
-from mlx_lm import load as mlx_load
-from mlx_lm import generate as mlx_generate
-from typing import Any, Dict, List, Optional
-from langchain_core.language_models import BaseChatModel
-from langchain_core.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate
-from langchain_core.pydantic_v1 import root_validator, Field
-from langchain_openai import ChatOpenAI
-from langchain_core.messages import BaseMessage, AIMessage
-from langchain_core.outputs import ChatGeneration, ChatResult
-
-
-
-## LANGCHAIN SETUP
-## ---------------------------------------------------------------------------------------------------------------------
-# Setting a default system prompt
-DEFAULT_SYSTEM_PROMPT = 'You are a helpful assistant.'
-
-
-
-## MODEL PARAMETERS
-## ---------------------------------------------------------------------------------------------------------------------
-class MLXModelParameters():
-
-    def __init__(self, temp = 0.7, max_tokens = 1000, system_prompt = DEFAULT_SYSTEM_PROMPT):
-        self.temp = temp
-        self.max_tokens = max_tokens
-        self.system_prompt = system_prompt
-
-    def __str__(self):
-        return f'Temperature: {self.temp}\nMax Tokens: {self.max_tokens}\nSystem Prompt: {self.system_prompt}'
-    
-    def __repr__(self):
-        return f'Temperature: {self.temp}\nMax Tokens: {self.max_tokens}\System Prompt: {self.system_prompt}'
-
-    def update_temp(self, new_temp):
-        self.temp = new_temp
-
-    def update_max_tokens(self, new_max_tokens):
-        self.max_tokens = new_max_tokens
-
-    def update_system_prompt(self, new_system_prompt):
-        self.system_prompt = new_system_prompt
-
-    def to_json(self):
-        return { 'temp': self.temp, 'max_tokens': self.max_tokens }
-    
-
-
-## MLX LANGCHAIN CUSTOM INTEGRATION
-## ---------------------------------------------------------------------------------------------------------------------
-# Instantiating the class representing the MLX Chat Model, inheriting from LangChain's BaseChatModel
-class MLXChatModel(BaseChatModel):
-    mlx_path: str
-    mlx_model: Any = Field(default = None, exclude = True)
-    mlx_tokenizer: Any = Field(default = None, exclude = True)
-    max_tokens: int = Field(default = 1000)
-
-    @property
-    def _llm_type(self) -> str:
-        return 'MLXChatModel'
-    
-    @root_validator()
-    def load_model(cls, values: Dict) -> Dict:
-
-        # Loading the model and tokenizer with the input string
-        model, tokenizer = mlx_load(path_or_hf_repo = values['mlx_path'])
-        
-        # Saving the variables back appropriately
-        values['mlx_model'] = model
-        values['mlx_tokenizer'] = tokenizer
-        return values
-    
-    def _generate(self, messages: List[BaseMessage], stop: Optional[List[str]]) -> ChatResult:
-
-        # Instantiating an empty string to represent the prompt we will be generating in the end
-        prompt = ''
-
-        # Extracting the raw text from each of the LangChain message types
-        for message in messages:
-            prompt += f'\n\n{message.content}'
-
-        # Generating the LLM response using MLX
-        mlx_response = mlx_generate(
-            model = self.mlx_model,
-            tokenizer = self.mlx_tokenizer,
-            max_tokens = self.max_tokens,
-            prompt = prompt
-        )
-
-        # Returning the MLX response as a proper LangChain ChatResult object
-        return ChatResult(generations = [ChatGeneration(message = AIMessage(content = mlx_response))])
+from langchain_core.prompts import ChatPromptTemplate, HumanMessagePromptTemplate, MessagesPlaceholder
+from langchain_community.llms.mlx_pipeline import MLXPipeline
+from langchain_community.chat_models.mlx import ChatMLX
+from langchain_core.runnables import RunnableLambda
+from langchain_community.chat_message_histories.in_memory import ChatMessageHistory
+from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
+from langchain_core.chat_history import BaseChatMessageHistory
+from langchain_core.runnables.history import RunnableWithMessageHistory
 
 
 
 ## GRADIO BACKEND LOAD
 ## ---------------------------------------------------------------------------------------------------------------------
-def load_chat_history():
+def start_new_chat_history():
     '''
-    Loads chat history from file
+    Starts a new chat history if a local one cannot be found
 
     Inputs:
-        - ?
-    
+        - N/A
+
     Returns:
-        - ?
+        - user_history (dict): A dictionary representing the user history that will be saved back to file
+        - lc_user_conversation_history (dict): A LangChain managed version of the user's conversation history
     '''
-    pass
+
+    # Creating the user history from the base schema
+    user_history = copy.deepcopy(BASE_USER_CONVERSATION_HISTORY_SCHEMA)
+
+    # Instantiating an empty dictionary to hold the LangChain (LC) user conversation history
+    lc_user_conversation_history = {}
+
+    return user_history, lc_user_conversation_history
+
+
+
+def load_chat_history_from_file(chat_history_json_location):
+    '''
+    Loads the chat history from file
+
+    Inputs:
+        - chat_history_json_location (str): The location of where the chat history JSON file resides
+
+    Returns:
+        - user_history (dict): A dictionary representing the user history that will be saved back to file
+        - lc_user_conversation_history (dict): A LangChain managed version of the user's conversation history
+    '''
+
+    # Checking to see if any chat history exists
+    if not os.path.exists(chat_history_json_location):
+        
+        # Instantiating a new user history if the chat does not exist
+        user_history, lc_user_conversation_history = start_new_chat_history()
+
+        return user_history, lc_user_conversation_history
+
+    # Instantiating an empty dictionary to hold the LangChain (LC) user conversation history
+    lc_user_conversation_history = {}
+
+    # Loading the user history from the local JSON file
+    with open(chat_history_json_location, 'r') as f:
+        user_history = json.load(f)
+
+    # Iterating over each conversation in the user history
+    for conversation_id, conversation in user_history['chat_history'].items():
+        
+        # Instantiating a list to keep track of the chat interaction
+        chat_interaction = []
+
+        # Instantiating a LangChain chat message history object
+        lc_chat_message_history = ChatMessageHistory()
+
+        # Iterating over each chat interaction in the conversation history
+        for chat_interaction in conversation['conversation']:
+
+            # Appending any user messages as a LangChain HumanMessage
+            if chat_interaction['role'] == 'user':
+                lc_chat_message_history.add_message(HumanMessage(content = chat_interaction['content']))
+
+            # Appending any assistant messages as a LangChain AIMessage
+            if chat_interaction['role'] == 'assistant':
+                lc_chat_message_history.add_message(AIMessage(content = chat_interaction['content'], metadata = chat_interaction['metadata']))
+
+        # Appending the full conversation and metadata to the LC user conversation history with conversation ID as the key
+        lc_user_conversation_history[conversation_id] = lc_chat_message_history
+
+    return user_history, lc_user_conversation_history
+
+
+
+def load_chat_history_as_df(user_history):
+    '''
+    Loads the chat history as a Pandas DataFrame for display purposes in the Gradio UI
+
+    Inputs:
+        - user_history (dict): A dictionary representing the user history that will be saved back to file
+
+    Returns:
+        - df_chat_history (Pandas DataFrame): A Pandas DataFrame that will be used as the reference point for displaying the chat history in the Gradio UI
+    '''
+
+    # Checking to see if there is any chat history
+    if len(user_history['chat_history']) == 0:
+
+        # Creating an empty DataFrame to represent no history
+        df_chat_history = pd.DataFrame(data = {'Chat History': []})
+        
+        return df_chat_history
+    
+    # Getting a list of all the summary titles
+    summary_titles = []
+    for chat_entry in user_history['chat_history'].values():
+        summary_titles.append(chat_entry['summary_title'])
+
+    # Outputting the summary titles as a Pandas DataFrame
+    df_chat_history = pd.DataFrame(data = {'Chat History': summary_titles})
+
+    return df_chat_history
+
 
 
 

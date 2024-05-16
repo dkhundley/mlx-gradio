@@ -1,7 +1,7 @@
 {
     "user_id": "default_username",
     "chat_history": {
-        "conv_id_44642eb7_3066_4cd4_8d76_1e0279478cea": {
+        "conv_id_11774b6e_247c_4d2a_a2e8_92fde264389b": {
             "conversation": [
                 {
                     "role": "user",
@@ -30,7 +30,7 @@
                     "content": "Chicago offers a wide range of activities for visitors of all ages and interests. Here are some popular things to do in Chicago:\n\n1. Explore the city's iconic architecture: Take a river cruise or architectural boat tour to learn about the city's famous buildings and their architects.\n2. Visit museums: Chicago is home to world-class museums such as the Art Institute of Chicago, the Museum of Science and Industry, and the Shedd Aquarium",
                     "metadata": {
                         "model_name": "mistralai/Mistral-7B-Instruct-v0.2",
-                        "timestamp": "2024-05-02 14:57:26.868778+00:00",
+                        "timestamp": "2024-05-15 23:53:45.758061+00:00",
                         "like_data": null,
                         "hyperparameters": {
                             "temp": 0.7,
@@ -40,9 +40,9 @@
                 }
             ],
             "system_prompt": "You are a helpful assistant.",
-            "summary_title": "Capital of Illinois: Springfield\n\n(Note: The title should be centered and capitalized as follows:\n\nCapital of Illinois: Springfield)"
+            "summary_title": "Capital City of Illinois: Springfield"
         },
-        "conv_id_0e04b483_4980_4ebb_83a2_c151e0f5004e": {
+        "conv_id_3a41c9b4_9473_403c_ae8b_d75fc51aaece": {
             "conversation": [
                 {
                     "role": "user",
@@ -53,7 +53,7 @@
                     "content": "The capital city of California is Sacramento. Sacramento is located in the central part of the state and is known for its rich history, cultural diversity, and various attractions such as Old Sacramento, the California State Capitol, and the California State Railroad Museum. It's also the seat of government for California and is home to various state government offices and agencies.",
                     "metadata": {
                         "model_name": "mistralai/Mistral-7B-Instruct-v0.2",
-                        "timestamp": "2024-05-02 14:57:08.511932+00:00",
+                        "timestamp": "2024-05-15 23:53:27.866575+00:00",
                         "like_data": null,
                         "hyperparameters": {
                             "temp": 0.7,
@@ -63,9 +63,9 @@
                 }
             ],
             "system_prompt": "You are a helpful assistant.",
-            "summary_title": "Capital City of California: Sacramento's Rich History"
+            "summary_title": "Capital City of California: Sacramento"
         },
-        "conv_id_7bde07e1_1845_492b_a0ef_b5839c93bacd": {
+        "conv_id_1939496c_f70e_4469_977d_9c4afbad6647": {
             "conversation": [
                 {
                     "role": "user",
@@ -76,7 +76,7 @@
                     "content": "New York does not have a capital city because it is a state in the United States. The capital city of New York State is Albany. However, New York City is the most populous city in the state and the largest city in the United States, and it is not the capital city. Albany is located about 150 miles northwest of New York City.",
                     "metadata": {
                         "model_name": "mistralai/Mistral-7B-Instruct-v0.2",
-                        "timestamp": "2024-05-02 14:57:19.764098+00:00",
+                        "timestamp": "2024-05-15 23:53:38.694548+00:00",
                         "like_data": null,
                         "hyperparameters": {
                             "temp": 0.7,
