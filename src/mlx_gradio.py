@@ -559,7 +559,8 @@ with gr.Blocks(theme = gr.themes.Base()) as demo:
 
                 # Creating a UI element to hold a list of chat histories, listed by chat summary titles
                 chat_history = gr.DataFrame(
-                    value = df_chat_history
+                    value = df_chat_history,
+                    interactive = False
                 )
 
             # Setting the elements of the right part of the "Chat"
@@ -642,8 +643,6 @@ with gr.Blocks(theme = gr.themes.Base()) as demo:
 
     # Defining the behavior to start a new conversation
     new_chat_button.click(fn = start_new_interaction, inputs = [chatbot], outputs = [chatbot])
-
-    # chatbot.like(vote, None, None)
     
 
 
