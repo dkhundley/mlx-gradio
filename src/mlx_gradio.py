@@ -6,14 +6,14 @@ import uuid
 import pandas as pd
 import gradio as gr
 import pandas as pd
-from langchain_core.prompts import ChatPromptTemplate, HumanMessagePromptTemplate, MessagesPlaceholder
-from langchain_community.llms.mlx_pipeline import MLXPipeline
-from langchain_community.chat_models.mlx import ChatMLX
-from langchain_core.runnables import RunnableLambda
-from langchain_community.chat_message_histories.in_memory import ChatMessageHistory
-from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
 from langchain_core.chat_history import BaseChatMessageHistory
+from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
+from langchain_core.prompts import ChatPromptTemplate, HumanMessagePromptTemplate, MessagesPlaceholder
+from langchain_core.runnables import RunnableLambda
 from langchain_core.runnables.history import RunnableWithMessageHistory
+from langchain_community.chat_message_histories.in_memory import ChatMessageHistory
+from langchain_community.chat_models.mlx import ChatMLX
+from langchain_community.llms.mlx_pipeline import MLXPipeline
 
 
 
@@ -156,6 +156,7 @@ def load_chat_history_as_df(user_history):
 
     Returns:
         - df_chat_history (Pandas DataFrame): A Pandas DataFrame that will be used as the reference point for displaying the chat history in the Gradio UI
+        - df_reference (Pandas DataFrame): A Pandas DataFrame that will serve as the reference point between the display dataframe and the JSON chat history
     '''
 
     # Checking to see if there is any chat history
@@ -163,18 +164,20 @@ def load_chat_history_as_df(user_history):
 
         # Creating an empty DataFrame to represent no history
         df_chat_history = pd.DataFrame(data = {'Chat History': []})
+        df_reference = pd.DataFrame(data = {'Chat History': [], 'Session ID': []})
         
-        return df_chat_history
+        return df_chat_history, df_reference
     
     # Getting a list of all the summary titles
-    summary_titles = []
-    for chat_entry in user_history['chat_history'].values():
-        summary_titles.append(chat_entry['summary_title'])
+    summary_titles = {}
+    for session_id, chat_entry in user_history['chat_history'].items():
+        summary_titles[session_id] = chat_entry['summary_title']
 
     # Outputting the summary titles as a Pandas DataFrame
-    df_chat_history = pd.DataFrame(data = {'Chat History': summary_titles})
+    df_chat_history = pd.DataFrame(data = {'Chat History': summary_titles.values()})
+    df_reference = pd.DataFrame(data = {'Chat History': summary_titles.values(), 'Session ID': summary_titles.keys()})
 
-    return df_chat_history
+    return df_chat_history, df_reference
 
 
 
@@ -184,7 +187,7 @@ def load_chat_history_as_df(user_history):
 user_history, lc_user_conversation_history = load_chat_history_from_file(chat_history_json_location = chat_history_json_location)
 
 # Forming the dataframe to represent the chat history in the UI
-df_chat_history = load_chat_history_as_df(user_history = user_history)
+df_chat_history, df_reference = load_chat_history_as_df(user_history = user_history)
 
 # Setting a new conversation ID to represent a new conversation
 current_session_id = 'conv_id_' + str.replace(str(uuid.uuid4()), '-', '_')
@@ -389,13 +392,14 @@ def lc_session_to_json_session(lc_current_session_history):
 
 ## GRADIO BEHAVIOR FUNCTIONS
 ## ---------------------------------------------------------------------------------------------------------------------
-def invoke_model(prompt_text, chatbot):
+def invoke_model(prompt_text, chatbot, chat_history):
     '''
     Invokes the model using MLX and saves chat history back to a local file
 
     Inputs:
         - prompt_text (str): The prompt text submitted by the user
         - chatbot (Gradio Chatbot): The Gradio chatbot to update
+        - chat_history (Gradio DF): The Gradio dataframe object representing the chat history
 
     Returns
         - chatbot (Gradio Chatbot): The Gradio chatbot with the updated chat
@@ -408,6 +412,8 @@ def invoke_model(prompt_text, chatbot):
     global chat_prompt_template
     global mlx_model_parameters
     global current_session_id
+    global df_chat_history
+    global df_reference
 
     # Creating the inference chain by chaining together the chat prompt, chat model, and custom function to update metadata
     inference_chain = chat_prompt_template | RunnableLambda(correct_for_no_system_models) | chat_model | RunnableLambda(update_ai_response_metadata)
@@ -443,6 +449,14 @@ def invoke_model(prompt_text, chatbot):
     if 'summary_title' not in user_history['chat_history'][current_session_id].keys():
         user_history['chat_history'][current_session_id]['summary_title'] = generate_summary_title(lc_current_session_history = lc_user_conversation_history[current_session_id], chat_model = chat_model)
 
+        # Updating chat history in the UI
+        df_chat_history, df_reference = load_chat_history_as_df(user_history = user_history)
+
+        # Creating a UI element to hold a list of chat histories, listed by chat summary titles
+        chat_history = gr.DataFrame(
+            value = df_chat_history
+        )
+
     # Writing the full history back to file
     with open(chat_history_json_location, 'w') as f:
         json.dump(user_history, f, indent = 4)
@@ -453,7 +467,7 @@ def invoke_model(prompt_text, chatbot):
     # Clearing the prompt for the next user input
     prompt_text = ''
 
-    return prompt_text, chatbot
+    return prompt_text, chatbot, chat_history
 
 
 
@@ -471,15 +485,49 @@ def load_existing_conversation(chatbot, selected_row: gr.SelectData):
     # Referencing global variables
     global current_session_id
     global df_chat_history
+    global df_reference
     global user_history
 
-    # Getting the summary title of the historical conversation
-    selected_summary_title = selected_row.value
+    # Getting the index position for the reference table
+    index_pos = selected_row.index[0]
+    selected_session_id = df_reference.iloc[index_pos]['Session ID']
+
+    # Loading the selected session ID's conversation history as a list of tuples
+    loaded_conversation = []
+    for i in range(0, len(user_history['chat_history'][selected_session_id]['conversation']), 2):
+        user_interaction = user_history['chat_history'][selected_session_id]['conversation'][i]['content']
+        ai_interaction = user_history['chat_history'][selected_session_id]['conversation'][i + 1]['content']
+        loaded_conversation.append((user_interaction, ai_interaction))
+
+    chatbot = gr.Chatbot(value = loaded_conversation)
+
+    # Updating the current session ID
+    current_session_id = selected_session_id
 
     return chatbot
 
     
 
+def start_new_interaction(chatbot):
+    '''
+    Starts a new chat interaction
+
+    Inputs:
+        - chatbot (Gradio Chatbot): The UI element representing the chatbot
+
+    Returns:
+        - chatbot (Gradio Chatbot): The cleared out chatbot UI
+    '''
+    # Referencing current session ID as a global object
+    global current_session_id
+
+    # Clearing out the chatbot
+    chatbot = gr.Chatbot(value = [])
+
+    # Starting a new session ID
+    current_session_id = 'conv_id_' + str.replace(str(uuid.uuid4()), '-', '_')
+
+    return chatbot
     
 
 ## GRADIO UI LAYOUT & FUNCTIONALITY
@@ -514,7 +562,7 @@ with gr.Blocks(theme = gr.themes.Base()) as demo:
                 )
 
             # Setting the elements of the right part of the "Chat"
-            with gr.Column(scale = 4):
+            with gr.Column(scale = 3):
 
                 # Creating the chatbot user interaction UI
                 chatbot = gr.Chatbot(label = 'Current Chat Interaction')
@@ -580,18 +628,20 @@ with gr.Blocks(theme = gr.themes.Base()) as demo:
 
     # Defining the behavior for what occurs when the user hits "Enter" after typing a prompt
     prompt_text.submit(fn = invoke_model,
-                       inputs = [prompt_text, chatbot],
-                       outputs = [prompt_text, chatbot])
+                       inputs = [prompt_text, chatbot, chat_history],
+                       outputs = [prompt_text, chatbot, chat_history])
 
     # Defining the behavior for what occurs when the user clicks the arrow button to submit a prompt
     submit_prompt_button.click(fn = invoke_model,
-                               inputs = [prompt_text, chatbot],
-                               outputs = [prompt_text, chatbot])
+                               inputs = [prompt_text, chatbot, chat_history],
+                               outputs = [prompt_text, chatbot, chat_history])
     
     # Defining the behavior to load a historical conversation from the Gradio DataFrame object
     chat_history.select(fn = load_existing_conversation, inputs = [chatbot], outputs = [chatbot])
 
-    # chat_history.select(fn = load_historical_chat, inputs = [chatbot], outputs = [chatbot])
+    # Defining the behavior to start a new conversation
+    new_chat_button.click(fn = start_new_interaction, inputs = [chatbot], outputs = [chatbot])
+
     # chatbot.like(vote, None, None)
     
 
